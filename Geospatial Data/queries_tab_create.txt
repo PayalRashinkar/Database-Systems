@@ -1,0 +1,32 @@
+CREATE EXTENSION postgis;
+CREATE EXTENSION postgis_topology;
+CREATE TABLE Pay_Tab (name varchar, geom geometry);
+
+INSERT INTO Pay_Tab VALUES
+	('Wallis_hall','POINT(-118.2870 34.0210)'),
+	('ASC', 'POINT(-118.2868 34.0218)'),
+	('SCA', 'POINT(-118.2860 34.0230)'),
+	('SCB', 'POINT(-118.2875 34.0241)'),
+	('Leventhal', 'POINT(-118.2858 34.0190)'),
+	('Arts_science', 'POINT(-118.2840 34.0206)'),
+	('Music', 'POINT(-118.2861 34.0228)'),
+	('Ramo Hall', 'POINT(-118.2853 34.0227)'),
+	('SGM', 'POINT(-118.2883 34.0210)'),
+	('Biegler', 'POINT(-118.2884 34.0208)'),
+	('Dornsife', 'POINT(-118.2867 34.0200)'),
+	('Marshall', 'POINT(-118.2856 34.0186)'),
+	('Home', 'POINT(-118.2623 34.0397)');
+
+
+SELECT name, ST_AsText(geom) FROM pay_tab;
+
+--Query1
+SELECT ST_AsText(ST_ConvexHull(ST_Collect(geom))) FROM pay_tab;
+
+--Query2
+SELECT name, ST_Astext(geom) as location, ST_Distance(geom,'POINT(-118.2623 34.0397)') as distance 
+FROM pay_tab
+WHERE name<>'Home' 
+ORDER BY ST_Distance(geom,'POINT(-118.2623 34.0397)') 
+limit 4;
+
